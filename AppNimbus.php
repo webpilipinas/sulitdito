@@ -14,7 +14,7 @@ class AppNimbus {
 		$app_key = $this->app_key;
 		$app_secret = $this->app_secret;
 		
-		$api_url = "http://api.appnimbus.local/{$controller}/{$action}";
+		$api_url = "http://api.appnimbus.com/{$controller}/{$action}";
 		$ch = curl_init();
 		
 		$signature = "POST\n" . $api_url . "\nbody_sha1=". sha1(json_encode($payload_array)); 
