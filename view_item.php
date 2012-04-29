@@ -97,8 +97,8 @@ $comments = $appnimbus->_restCall('object', 'get_by_parent', array(
 					<?php endif; ?>
 				</ul>
 				<div class="alert alert-info" style="margin: 10px !important;">
-					<p style="font-weight: strong; font-size: 14px">Download Sulit Dito's source code!</p>
-					<br /><a href="https://github.com/webpilipinas/sulitdito" target="_blank">https://github.com/webpilipinas/sulitdito</a></p>
+					<p style="font-weight: bold; font-size: 16px">Download <a href="https://github.com/webpilipinas/sulitdito" target="_blank">Sulit Dito's</a> source code!</p>
+					<a href="https://github.com/webpilipinas/sulitdito" target="_blank">https://github.com/webpilipinas/sulitdito</a></p>
 				</div>
 				</div><!--/.well -->
 			</div><!--/span-->
