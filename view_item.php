@@ -55,7 +55,7 @@ $comments = $appnimbus->_restCall('object', 'get_by_parent', array(
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#newitem" data-toggle="model">Post an Item</a></li>
+					<li><a href="#postitem" data-toggle="model">Post an Item</a></li>
 					<li class="divider"></li>
 					<li><a href="/sign_out.php">Sign Out</a></li>
 				</ul>
@@ -81,9 +81,19 @@ $comments = $appnimbus->_restCall('object', 'get_by_parent', array(
 						'relationship' => 'item_of'
 					));
 					?>
-					<?php foreach($data['data'] as $item): ?>
-					<li <?php if( $page_item['data']['id'] == $item['id'] ) { echo 'class="active"'; } ?>><a href="view_item.php?id=<?php echo $item['id']; ?>"><i class="icon-heart"></i><?php echo $item['properties']['name']; ?></a></li>
-					<?php endforeach; ?>
+						<?php if( $data['success'] && isset($data['data']) && count($data['data']) > 0 ): ?>
+							<?php foreach($data['data'] as $item): ?>
+							<li <?php if( $page_item['data']['id'] == $item['id'] ) { echo 'class="active"'; } ?>><a href="view_item.php?id=<?php echo $item['id']; ?>"><i class="icon-heart"></i><?php echo $item['properties']['name']; ?></a></li>
+							<?php endforeach; ?>
+							<li><a href="#postitem" data-toggle="modal" data-target="#postitem"><i class="icon-upload"></i>Post an Item</a></li>
+						<?php else: ?>
+							<div class="alert alert-warning">
+							<p>You don't have any items yet! Start posting items by <a href="#postitem" data-toggle="modal">clicking here</a></p>
+							</div>
+						<?php endif; ?>
+					<?php else: ?>
+					<h2>What is <strong>SulitDito?</strong></h2>
+					<p>SulitDito provides anyone with an easy way to sell anything online!</p>
 					<?php endif; ?>
 				</ul>
 				</div><!--/.well -->
@@ -91,23 +101,32 @@ $comments = $appnimbus->_restCall('object', 'get_by_parent', array(
 			<div class="span8">
 				<div class="row-fluid well">
 					<div class="span3">
-						<img height="300" src="<?php echo $page_item['data']['properties']['photo']; ?>" alt="<?php echo $page_item['data']['properties']['name']; ?>" />	
+						<img width="300" src="<?php echo $page_item['data']['properties']['photo']; ?>" alt="<?php echo $page_item['data']['properties']['name']; ?>" />	
 					</div>
 					<div class="span8">
 						<h1><?php echo $page_item['data']['properties']['name']; ?></h1>
-						<h4>Price: PHP<small style="color: #000000 !important;"><?php echo $page_item['data']['properties']['price']; ?></small></h4>
+						<h4>Price: <small style="color: #000000 !important;">PHP<?php echo $page_item['data']['properties']['price']; ?></small></h4>
 						<h4>Description:</h4>
-						<p><?php echo $page_item['data']['properties']['description']; ?></p>
+						<p><?php echo nl2br($page_item['data']['properties']['description']); ?></p>
 						<h4>Contact:</h4>
 						<a class="btn btn-primary" href="mailto:<?php echo $item_parent['data']['properties']['email']; ?>"><?php echo $item_parent['data']['properties']['email']; ?></a>
 						
 						<br /><br />
 						<h4>Discuss</h4>
 						<?php if( $comments['success'] == false || count($comments['data']) < 1 ): ?>
-						<div class="alert alert-info">
+						<div class="alert alert-info">						
+							<?php if( isset($_SESSION['logged_in']) ): ?>
 							<strong>There are no comments yet for this item! Be the first one to comment!</strong>
+							<?php else: ?>
+							<strong>There are no comments yet for this item! <a href="#login" data-toggle="modal">Login to comment!</a></strong>
+							<?php endif; ?>
 						</div>
 						<?php else: ?>
+						<?php if( !isset($_SESSION['logged_in']) ): ?>
+						<div class="alert alert-info">
+							Want to join the conversation? <strong><a href="#login" data-toggle="modal">Login to leave a comment!</a></strong>
+						</div>
+						<?php endif; ?>
 						<?php foreach($comments['data'] as $comment): ?>
 						<?php $comment_user = $appnimbus->_restCall('object', 'get_by_id', array(
 							'id' => $comment['parents']['comment_of']
@@ -127,6 +146,7 @@ $comments = $appnimbus->_restCall('object', 'get_by_parent', array(
 						</div>
 						<?php endforeach; ?>
 						<?php endif; ?>
+						<?php if( isset($_SESSION['logged_in']) ): ?>
 						<div class="row-fluid">
 							<div class="span1">
 								<img src="<?php echo 'http://www.gravatar.com/avatar/' . md5($_SESSION['username']); ?>?d=retro&s=50" alt="<?php echo $_SESSION['username']; ?>" />
@@ -141,7 +161,7 @@ $comments = $appnimbus->_restCall('object', 'get_by_parent', array(
 								</form>
 							</div>
 						</div>
-						
+						<?php endif; ?>
 					</div>
 				</div>
 			</div><!--/span-->

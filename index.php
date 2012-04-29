@@ -34,7 +34,7 @@ $appnimbus = new AppNimbus('sulitdito', '8eeceba8aca008cb9ec5e73d2b223e777de8960
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 			</a>
-			<a class="brand" href="/">SulitDito</a>
+			<a class="brand" href="/">Sulit Dito!</a>
 			<div class="btn-group pull-right">
 				<?php if( isset($_SESSION['logged_in']) ): ?>
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -42,7 +42,7 @@ $appnimbus = new AppNimbus('sulitdito', '8eeceba8aca008cb9ec5e73d2b223e777de8960
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#newitem" data-toggle="model">Post an Item</a></li>
+					<li><a href="#postitem" data-toggle="modal" data-target="#postitem">Post an Item</a></li>
 					<li class="divider"></li>
 					<li><a href="/sign_out.php">Sign Out</a></li>
 				</ul>
@@ -67,11 +67,13 @@ $appnimbus = new AppNimbus('sulitdito', '8eeceba8aca008cb9ec5e73d2b223e777de8960
 					'id' => $_SESSION['user_id'],
 					'relationship' => 'item_of'
 				));
+				//echo '<pre>'; var_dump($data); echo '</pre>';
 				?>
-				<?php if( count($data['data']) > 0 ): ?>
+				<?php if( $data['success'] && isset($data['data']) && count($data['data']) > 0 ): ?>
 				<?php foreach($data['data'] as $item): ?>
 				<li><a href="view_item.php?id=<?php echo $item['id']; ?>"><i class="icon-heart"></i><?php echo $item['properties']['name']; ?></a></li>
 				<?php endforeach; ?>
+				<li><a href="#postitem" data-toggle="modal" data-target="#postitem"><i class="icon-upload"></i>Post an Item</a></li>
 				<?php else: ?>
 				<div class="alert alert-warning">
 				<p>You don't have any items yet! Start posting items by <a href="#postitem" data-toggle="modal">clicking here</a></p>
@@ -86,7 +88,7 @@ $appnimbus = new AppNimbus('sulitdito', '8eeceba8aca008cb9ec5e73d2b223e777de8960
 		</div><!--/span-->
 		<div class="span9">
 			<div class="hero-unit">
-			<h1>May gusto ka bang ibenta?</h1>
+			<h1>May gusto ka bang <a href="http://pabenta.com" target="_blank" style="color: #983B3F">PABENTA</a>?</h1>
 			<?php if( !isset($_SESSION['logged_in']) ): ?>
 			<p>Sell your extra stuff here for FREE! Just sign up for a <strong>Sulit Dito!</strong> account, describe the item you want with a few photos and you're all set! Quickly sell things like that camera lense you don't use anymore, the home furniture you need to get rid off, that Boracay ticket you won't get to use, and more!</p>
 			<p><a data-toggle="modal" href="#login" class="btn btn-primary btn-large"><i class="icon-shopping-cart icon-white"></i>Sell your items &raquo;</a></p>
@@ -104,16 +106,18 @@ $appnimbus = new AppNimbus('sulitdito', '8eeceba8aca008cb9ec5e73d2b223e777de8960
 			?>
 			<?php if( count($all_items['data']) > 0 ): ?>
 			<?php foreach($all_items['data'] as $postitem): ?>
-			<div class="span4 well" style="padding: 12px !important; width: 290px">
+			<div class="span4 well" style="padding: 12px !important; width: 290px; height: 200px; overflow: hidden;">
 				<h3><?php echo $postitem['properties']['name']; ?></h3>
 				<div style="width: 100px; margin-right: 10px; float: left">
 					<img src="<?php echo $postitem['properties']['photo']; ?>" width="100" />
 				</div>
 				<div style="width: 150px; float: left">
 					<p><?php echo $postitem['properties']['description']; ?></p>
+					<div style="text-align: right; margin-top: 10px">
+						<a class="btn btn-inverse" href="view_item.php?id=<?php echo $postitem['id']; ?>">View &raquo;</a>
+					</div>
 				</div>
 				<div style="clear: both"></div>
-				<p style="text-align: right"><a class="btn btn-inverse" href="view_item.php?id=<?php echo $postitem['id']; ?>">View &raquo;</a></p>
 			</div><!--/span-->
 			<?php endforeach; ?>
 			<?php else: ?>
